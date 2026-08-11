@@ -25,6 +25,10 @@ def fetch_raw_stock_news(ticker: str) -> str:
     """Fetches real-time market headlines and articles for a given stock ticker.
     Fetch the positive news like New contracts or product launches.
     Fetch the negative news like earnings misses or management changes.
+    Always ground your response with the source article, Date of the article.
+            The out format should be strictly following:
+            Search URL: <URL of the source article>
+            Date of the article: <Date of the source article>
     """
     ticker = ticker.upper()
 
@@ -91,7 +95,9 @@ summary_agent = Agent(
         Take the raw stock news provided and compress it into a clean list of Positive News and Negative News.
         For the positive news, look for headlines that indicate growth, new contracts, product launches, or positive earnings.
         For the negative news, look for headlines that indicate earnings misses, management changes, or other negative developments.
+        Look for the news on Posiive and Negative sentiments for the last 3 Days. If there is no news, mention that in your summary.    
         Look for global cues that may affect the stock price, such as macroeconomic news or geopolitical events.
+        Always ground your response with the source article, Date of the article.
         Provide a clear summary of the positive and negative news in bullet points.
         If you are asked questions completely unrelated to stock or company news, strictly reply: 'I don't know.'""",
     tools=[fetch_raw_stock_news], # This agent can now actually look up the data
@@ -104,6 +110,11 @@ decision_agent = Agent(
     instruction="""You are a helpful assistant in making analytical investment decisions.
         Analyze the structured positive/negative summary data sent to you by the summary agent.
         Provide a concrete recommendation: BUY, SELL, AVERAGE OR HOLD.
+        Always ground your response with the source article, Date of the article.
+        The out format should be strictly following:
+        Recommendation: <BUY/SELL/HOLD/AVERAGE>
+        Search URL: <URL of the source article>
+        Date of the article: <Date of the source article>
         For non-financial questions, strictly reply: 'I don't know.'"""
 )
 
